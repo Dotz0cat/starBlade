@@ -1,5 +1,6 @@
 package com.Ocat.starBlade;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -8,7 +9,7 @@ import net.minecraft.world.World;
 
 public class starBladeHilt extends Item {
 	boolean isIgnited;
-	int stage;
+	int stage = 0;
 	
     public starBladeHilt() {
         setUnlocalizedName("starBladeHilt");
@@ -32,10 +33,14 @@ public class starBladeHilt extends Item {
         	setTextureName(StarBlade.MODID + ":starBladeHilt");
         	setMaxDamage(0);
         }
+        setCreativeTab(CreativeTabs.tabCombat);
     }
     
-    public void ignite(ItemStack stack) {
+    public void ignite(ItemStack stack, EntityPlayer player) {
         //adds the code for igniting the sword
+    	//acess inventory and comsume the fuel
+    	player.inventory.consumeInventoryItem(items.v1Fuel);
+    	//nbt stuff!!
     	NBTTagCompound nbt;
     	if (stack.hasTagCompound()) {
     		nbt = stack.getTagCompound();
@@ -106,7 +111,7 @@ public class starBladeHilt extends Item {
     	}
     	int i3 = nbt.getInteger("timer3");
     	while (i3>=1) {
-    		nbt.setInteger("timer2", i3);
+    		nbt.setInteger("timer3", i3);
     		i3--;
     	}
     	if (nbt.getInteger("timer3")==0) {
@@ -116,15 +121,22 @@ public class starBladeHilt extends Item {
     	}
     	stage = 0;
     	//code to change the item to a depleated star blade
+    	replaceItem(player);
+    }
+    
+    public void replaceItem(EntityPlayer player) {
+    	ItemStack dpleated = (ItemStack) Item.itemRegistry.getObject("starBlade:depleatedStarMetalBlade");
+    	player.inventory.consumeInventoryItem(items.starBladeHilt);
+    	player.inventory.addItemStackToInventory(dpleated);
     }
     
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
     	boolean hasFuel = false;
-    	hasFuel = player.inventory.hasItemStack(starBlade:v1Fuel);
+    	hasFuel = player.inventory.hasItem(items.v1Fuel);
     	//if has fuel and not ignited
     	if (!isIgnited&&stage==0&&hasFuel) {
-    		ignite(itemStack);
+    		ignite(itemStack, player);
     	}
 		return itemStack;
     }
