@@ -1,6 +1,7 @@
 package com.Ocat.starBlade;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -72,59 +73,60 @@ public class starBladeHilt extends Item {
     	
     	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 1"));
     	//timing this could be laggy. have some other idiot look at it.
-    	nbt.setInteger("timer1", (int) world.getTotalWorldTime());
-    	//set up while loop 
-    	int i = 1;
-    	while (i==1) {
-    		if ((nbt.getInteger("timer1")+6000)>=world.getTotalWorldTime()); {
-    			//exit loop
-    			i=0;
-    			//remove tag
-    			nbt.removeTag("timer1");
-    		}
-    	}
-    	stage = 2;
+    	nbt.setLong("timer1", world.getTotalWorldTime());
     	
-    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Stage 2"));
-    	//stage 2 timer this will be fun
-    	nbt.setInteger("timer2", (int) world.getTotalWorldTime());
-    	//set up while loop 
-    	int i2 = 1;
-    	while (i2==1) {
-    		if ((nbt.getInteger("timer2")+6000)>=world.getTotalWorldTime()); {
-    			//exit loop
-    			i2=0;
-    			//remove tag
-    			nbt.removeTag("timer2");
-    		}
-    	}
-    	stage = 3;
-    	
-    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Stage 3"));
-    	//stage 3
-    	nbt.setInteger("timer3", (int) world.getTotalWorldTime());
-    	//set up while loop 
-    	int i3 = 1;
-    	while (i3==1) {
-    		if ((nbt.getInteger("timer3")+6000)>=world.getTotalWorldTime()); {
-    			//exit loop
-    			i3=0;
-    			//remove tag
-    			nbt.removeTag("timer3");
-    		}
-    	}
-    	stage = 0;
-    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("done"));
-    	stage = 0;
-    	//code to change the item to a depleated star blade
-    	replaceItem(player);
-    	isIgnited = false;
     }
     
     public void replaceItem(EntityPlayer player) {
     	ItemStack dpleated = new ItemStack(items.depleatedStarMetalBlade);
     	player.inventory.consumeInventoryItem(items.starBladeHilt);
     	player.inventory.addItemStackToInventory(dpleated);
+    }
+    
+    @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int num, boolean bool) {
+    	NBTTagCompound nbt;
+    	if (stack.hasTagCompound()) {
+    		nbt = stack.getTagCompound();
+    		if (nbt.getBoolean("isIgnited")) {
+        		switch (nbt.getInteger("Stage")) {
+        			case (1):
+        				if ((nbt.getLong("timer1")+6000)>=world.getTotalWorldTime()); {
+        	    			nbt.removeTag("timer1");
+        	    			nbt.setInteger("stage", 2);
+        	    			stage = 2;
+        	    			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 2"));
+        	    			nbt.setLong("timer2", world.getTotalWorldTime());
+        	    		}
+        			break;
+        			case (2):
+        				if ((nbt.getLong("timer2")+6000)>=world.getTotalWorldTime()); {
+        	    			nbt.removeTag("timer2");
+        	    			nbt.setInteger("stage", 3);
+        	    			stage = 3;
+        	    			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 3"));
+        	    			nbt.setLong("timer3", world.getTotalWorldTime());
+        	    		}
+        			break;
+        			case (3):
+        				if ((nbt.getLong("timer3")+6000)>=world.getTotalWorldTime()); {
+        	    			nbt.removeTag("timer3");
+        	    			nbt.setInteger("stage", 0);
+        	    			stage = 0;
+        	    			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("done"));
+        	    			//get current player
+        	    			replaceItem((EntityPlayer)entity);
+        	    			nbt.setBoolean("isIgnited", false);
+        	    			isIgnited = false;
+        	    		}
+        			break;
+        			case (0):
+        			default:
+        				isIgnited = false;
+        			break;
+        		}
+        	}
+    	}
     }
     
     @Override
