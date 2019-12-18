@@ -86,47 +86,49 @@ public class starBladeHilt extends Item {
     @Override
     public void onUpdate(ItemStack stack, World world, Entity entity, int num, boolean bool) {
     	NBTTagCompound nbt;
-    	if (stack.hasTagCompound()) {
-    		nbt = stack.getTagCompound();
-    		if (nbt.getBoolean("isIgnited")) {
-        		switch (nbt.getInteger("Stage")) {
-        			case (1):
-        				if ((nbt.getLong("timer1")+6000)>=world.getTotalWorldTime()); {
-        	    			nbt.removeTag("timer1");
-        	    			nbt.setInteger("stage", 2);
-        	    			stage = 2;
-        	    			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 2"));
-        	    			nbt.setLong("timer2", world.getTotalWorldTime());
-        	    		}
-        			break;
-        			case (2):
-        				if ((nbt.getLong("timer2")+6000)>=world.getTotalWorldTime()); {
-        	    			nbt.removeTag("timer2");
-        	    			nbt.setInteger("stage", 3);
-        	    			stage = 3;
-        	    			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 3"));
-        	    			nbt.setLong("timer3", world.getTotalWorldTime());
-        	    		}
-        			break;
-        			case (3):
-        				if ((nbt.getLong("timer3")+6000)>=world.getTotalWorldTime()); {
-        	    			nbt.removeTag("timer3");
-        	    			nbt.setInteger("stage", 0);
-        	    			stage = 0;
-        	    			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("done"));
-        	    			//get current player
-        	    			replaceItem((EntityPlayer)entity);
-        	    			nbt.setBoolean("isIgnited", false);
-        	    			isIgnited = false;
-        	    		}
-        			break;
-        			case (0):
-        			default:
-        				isIgnited = false;
-        			break;
-        		}
-        	}
-    	}
+    	try {
+			nbt = stack.getTagCompound();
+			if (nbt.getBoolean("isIgnited")) {
+				switch (nbt.getInteger("Stage")) {
+					case (1):
+						if ((nbt.getLong("timer1")+6000)>=world.getTotalWorldTime()); {
+				    		nbt.removeTag("timer1");
+				    		nbt.setInteger("stage", 2);
+				    		stage = 2;
+				    		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 2"));
+				    		nbt.setLong("timer2", world.getTotalWorldTime());
+				    	}
+					break;
+					case (2):
+						if ((nbt.getLong("timer2")+6000)>=world.getTotalWorldTime()); {
+				    		nbt.removeTag("timer2");
+				    		nbt.setInteger("stage", 3);
+				    		stage = 3;
+				    		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 3"));
+				    		nbt.setLong("timer3", world.getTotalWorldTime());
+				    	}
+					break;
+					case (3):
+						if ((nbt.getLong("timer3")+6000)>=world.getTotalWorldTime()); {
+				    		nbt.removeTag("timer3");
+				    		nbt.setInteger("stage", 0);
+				    		stage = 0;
+				    		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("done"));
+				    		//get current player
+				    		replaceItem((EntityPlayer)entity);
+				    		nbt.setBoolean("isIgnited", false);
+				    		isIgnited = false;
+				    	}
+					break;
+					case (0):
+					default:
+						isIgnited = false;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("the things broke"));
+		}
     }
     
     @Override
