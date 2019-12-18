@@ -5,6 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 public class starBladeHilt extends Item {
@@ -36,7 +38,7 @@ public class starBladeHilt extends Item {
         setCreativeTab(CreativeTabs.tabCombat);
     }
     
-    public void ignite(ItemStack stack, EntityPlayer player) {
+    public void ignite(ItemStack stack, EntityPlayer player, World world) {
         //adds the code for igniting the sword
     	//acess inventory and comsume the fuel
     	player.inventory.consumeInventoryItem(items.v1Fuel);
@@ -67,58 +69,52 @@ public class starBladeHilt extends Item {
     		nbt.setInteger("Stage", 1);
     		stage = 1;
     	}
+    	
+    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 1"));
     	//timing this could be laggy. have some other idiot look at it.
-    	if (nbt.hasKey("timer1")) {
-    		nbt.setInteger("timer1", 6000);
+    	nbt.setInteger("timer1", (int) world.getTotalWorldTime());
+    	//set up while loop 
+    	int i = 1;
+    	while (i==1) {
+    		if ((nbt.getInteger("timer1")+6000)>=world.getTotalWorldTime()); {
+    			//exit loop
+    			i=0;
+    			//remove tag
+    			nbt.removeTag("timer1");
+    		}
     	}
-    	else {
-    		nbt.setInteger("timer1", 6000);
-    	}
-    	//set up while loop to irment timer
-    	int i = nbt.getInteger("timer1");
-    	while (i>=1) {
-    		nbt.setInteger("timer1", i);
-    		i--;
-    	}
-    	if (nbt.getInteger("timer1")==0) {
-    		nbt.removeTag("timer1");
-    		nbt.setInteger("stage", 2);
-    		stage = 2;
-    	}
+    	stage = 2;
+    	
+    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Stage 2"));
     	//stage 2 timer this will be fun
-    	if (nbt.hasKey("timer2")) {
-    		nbt.setInteger("timer2", 6000);
+    	nbt.setInteger("timer2", (int) world.getTotalWorldTime());
+    	//set up while loop 
+    	int i2 = 1;
+    	while (i2==1) {
+    		if ((nbt.getInteger("timer2")+6000)>=world.getTotalWorldTime()); {
+    			//exit loop
+    			i2=0;
+    			//remove tag
+    			nbt.removeTag("timer2");
+    		}
     	}
-    	else {
-    		nbt.setInteger("timer2", 6000);
-    	}
-    	int i2 = nbt.getInteger("timer2");
-    	while (i2>=1) {
-    		nbt.setInteger("timer2", i2);
-    		i2--;
-    	}
-    	if (nbt.getInteger("timer2")==0) {
-    		nbt.removeTag("timer2");
-    		nbt.setInteger("stage", 3);
-    		stage = 3;
-    	}
+    	stage = 3;
+    	
+    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Stage 3"));
     	//stage 3
-    	if (nbt.hasKey("timer3")) {
-    		nbt.setInteger("timer3", 6000);
+    	nbt.setInteger("timer3", (int) world.getTotalWorldTime());
+    	//set up while loop 
+    	int i3 = 1;
+    	while (i3==1) {
+    		if ((nbt.getInteger("timer3")+6000)>=world.getTotalWorldTime()); {
+    			//exit loop
+    			i3=0;
+    			//remove tag
+    			nbt.removeTag("timer3");
+    		}
     	}
-    	else {
-    		nbt.setInteger("timer3", 6000);
-    	}
-    	int i3 = nbt.getInteger("timer3");
-    	while (i3>=1) {
-    		nbt.setInteger("timer3", i3);
-    		i3--;
-    	}
-    	if (nbt.getInteger("timer3")==0) {
-    		nbt.removeTag("timer3");
-    		nbt.setInteger("stage", 0);
-    		stage = 0;
-    	}
+    	stage = 0;
+    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("done"));
     	stage = 0;
     	//code to change the item to a depleated star blade
     	replaceItem(player);
@@ -136,7 +132,9 @@ public class starBladeHilt extends Item {
     	hasFuel = player.inventory.hasItem(items.v1Fuel);
     	//if has fuel and not ignited
     	if (!isIgnited&&stage==0&&hasFuel) {
-    		ignite(itemStack, player);
+    		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("ignited"));
+    		ignite(itemStack, player, world);
+    		
     	}
 		return itemStack;
     }
