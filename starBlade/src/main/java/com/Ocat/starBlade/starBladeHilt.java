@@ -118,6 +118,7 @@ public class starBladeHilt extends Item {
     	stage = 0;
     	//code to change the item to a depleated star blade
     	replaceItem(player);
+    	isIgnited = false;
     }
     
     public void replaceItem(EntityPlayer player) {
