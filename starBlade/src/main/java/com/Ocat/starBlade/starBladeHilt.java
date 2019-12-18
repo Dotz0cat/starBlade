@@ -125,7 +125,7 @@ public class starBladeHilt extends Item {
     }
     
     public void replaceItem(EntityPlayer player) {
-    	ItemStack dpleated = (ItemStack) Item.itemRegistry.getObject("starBlade:depleatedStarMetalBlade");
+    	ItemStack dpleated = new ItemStack(items.depleatedStarMetalBlade);
     	player.inventory.consumeInventoryItem(items.starBladeHilt);
     	player.inventory.addItemStackToInventory(dpleated);
     }
