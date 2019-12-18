@@ -98,6 +98,7 @@ public class starBladeHilt extends Item {
 				    		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 2"));
 				    		nbt.setLong("timer2", world.getTotalWorldTime());
 				    	}
+						MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("i am in the switch"));
 					break;
 					case (2):
 						if ((nbt.getLong("timer2")+6000)>=world.getTotalWorldTime()); {
@@ -107,6 +108,7 @@ public class starBladeHilt extends Item {
 				    		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 3"));
 				    		nbt.setLong("timer3", world.getTotalWorldTime());
 				    	}
+						MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("i am in the switch"));
 					break;
 					case (3):
 						if ((nbt.getLong("timer3")+6000)>=world.getTotalWorldTime()); {
@@ -119,10 +121,11 @@ public class starBladeHilt extends Item {
 				    		nbt.setBoolean("isIgnited", false);
 				    		isIgnited = false;
 				    	}
+						MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("i am in the switch"));
 					break;
 					case (0):
 					default:
-						isIgnited = false;
+						MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("i am in the switch"));
 					break;
 				}
 			}
