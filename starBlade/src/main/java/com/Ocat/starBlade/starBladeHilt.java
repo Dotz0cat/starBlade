@@ -5,6 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 public class starBladeHilt extends Item {
@@ -67,6 +69,7 @@ public class starBladeHilt extends Item {
     		nbt.setInteger("Stage", 1);
     		stage = 1;
     	}
+    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 1"));
     	//timing this could be laggy. have some other idiot look at it.
     	if (nbt.hasKey("timer1")) {
     		nbt.setInteger("timer1", 6000);
@@ -85,6 +88,7 @@ public class starBladeHilt extends Item {
     		nbt.setInteger("stage", 2);
     		stage = 2;
     	}
+    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Stage 2"));
     	//stage 2 timer this will be fun
     	if (nbt.hasKey("timer2")) {
     		nbt.setInteger("timer2", 6000);
@@ -102,6 +106,7 @@ public class starBladeHilt extends Item {
     		nbt.setInteger("stage", 3);
     		stage = 3;
     	}
+    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Stage 3"));
     	//stage 3
     	if (nbt.hasKey("timer3")) {
     		nbt.setInteger("timer3", 6000);
@@ -119,6 +124,7 @@ public class starBladeHilt extends Item {
     		nbt.setInteger("stage", 0);
     		stage = 0;
     	}
+    	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("done"));
     	stage = 0;
     	//code to change the item to a depleated star blade
     	replaceItem(player);
@@ -136,7 +142,9 @@ public class starBladeHilt extends Item {
     	hasFuel = player.inventory.hasItem(items.v1Fuel);
     	//if has fuel and not ignited
     	if (!isIgnited&&stage==0&&hasFuel) {
+    		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("ignited"));
     		ignite(itemStack, player);
+    		
     	}
 		return itemStack;
     }
