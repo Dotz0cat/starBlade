@@ -52,25 +52,12 @@ public class starBladeHilt extends Item {
     		nbt = new NBTTagCompound();
     	}
     	//is ignited
-    	if (nbt.hasKey("isIgnited")) {
-    		nbt.setBoolean("isIgnited", true);
-    		isIgnited = true;
-    	}
-    	else {
-    		nbt.setBoolean("isIgnited", true);
-    		isIgnited = true;
-    	}
+    	nbt.setBoolean("isIgnited", true);
+    	isIgnited = true;
     	//stage 1
     	//now changing stages will be the tricky part
-    	if (nbt.hasKey("stage")) {
-    		nbt.setInteger("stage", 1);
-    		stage = 1;
-    	}
-    	else {
-    		nbt.setInteger("Stage", 1);
-    		stage = 1;
-    	}
-    	
+    	nbt.setInteger("stage", 1);
+    	stage = 1;
     	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 1"));
     	//timing this could be laggy. have some other idiot look at it.
     	nbt.setLong("timer1", world.getTotalWorldTime());
@@ -78,9 +65,9 @@ public class starBladeHilt extends Item {
     }
     
     public void replaceItem(EntityPlayer player) {
-    	ItemStack dpleated = new ItemStack(items.depleatedStarMetalBlade);
+    	ItemStack depleted = new ItemStack(items.depleatedStarMetalBlade);
     	player.inventory.consumeInventoryItem(items.starBladeHilt);
-    	player.inventory.addItemStackToInventory(dpleated);
+    	player.inventory.addItemStackToInventory(depleted);
     }
     
     @Override
@@ -88,10 +75,10 @@ public class starBladeHilt extends Item {
     	NBTTagCompound nbt;
     	try {
 			nbt = stack.getTagCompound();
-			if (nbt.getBoolean("isIgnited")) {
-				switch (nbt.getInteger("Stage")) {
+			if (nbt.getBoolean("isIgnited")||isIgnited) {
+				switch (nbt.getInteger("stage")) {
 					case (1):
-						if ((nbt.getLong("timer1")+6000)>=world.getTotalWorldTime()); {
+						if (world.getTotalWorldTime()>=(nbt.getLong("timer1")+600)); {
 				    		nbt.removeTag("timer1");
 				    		nbt.setInteger("stage", 2);
 				    		stage = 2;
@@ -101,17 +88,17 @@ public class starBladeHilt extends Item {
 						MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("i am in the switch"));
 					break;
 					case (2):
-						if ((nbt.getLong("timer2")+6000)>=world.getTotalWorldTime()); {
+						if (world.getTotalWorldTime()>=(nbt.getLong("timer2")+600)); {
 				    		nbt.removeTag("timer2");
 				    		nbt.setInteger("stage", 3);
 				    		stage = 3;
 				    		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 3"));
 				    		nbt.setLong("timer3", world.getTotalWorldTime());
 				    	}
-						MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("i am in the switch"));
+						//MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("i am in the switch"));
 					break;
 					case (3):
-						if ((nbt.getLong("timer3")+6000)>=world.getTotalWorldTime()); {
+						if (world.getTotalWorldTime()>=(nbt.getLong("timer3")+600)); {
 				    		nbt.removeTag("timer3");
 				    		nbt.setInteger("stage", 0);
 				    		stage = 0;
@@ -121,7 +108,7 @@ public class starBladeHilt extends Item {
 				    		nbt.setBoolean("isIgnited", false);
 				    		isIgnited = false;
 				    	}
-						MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("i am in the switch"));
+						//MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("i am in the switch"));
 					break;
 					case (0):
 					default:
@@ -130,7 +117,7 @@ public class starBladeHilt extends Item {
 				}
 			}
 		} catch (Exception e) {
-			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("the things broke"));
+			//MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("the things broke"));
 		}
     }
     
