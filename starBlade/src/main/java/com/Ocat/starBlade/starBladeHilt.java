@@ -61,7 +61,6 @@ public class starBladeHilt extends Item {
     	MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("stage 1"));
     	//timing this could be laggy. have some other idiot look at it.
     	nbt.setLong("timer1", world.getTotalWorldTime());
-    	
     }
     
     public void replaceItem(EntityPlayer player) {
@@ -129,7 +128,6 @@ public class starBladeHilt extends Item {
     	if (!isIgnited&&stage==0&&hasFuel) {
     		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("ignited"));
     		ignite(itemStack, player, world);
-    		
     	}
 		return itemStack;
     }
